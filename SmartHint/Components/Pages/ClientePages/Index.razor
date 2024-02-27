@@ -1,0 +1,25 @@
+﻿@page "/clientes"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject SmartHint.Data.SmartHintDbContext DB
+@using SmartHint.Models
+
+<PageTitle>Index</PageTitle>
+
+<QuickGrid Class="table" Items="DB.Clientes">
+    <PropertyColumn Property="cliente => cliente.NomeClienteRazaoSocial" />
+    <PropertyColumn Property="cliente => cliente.Email" />
+    <PropertyColumn Property="cliente => cliente.Telefone" />
+    <PropertyColumn Property="cliente => cliente.TipoPessoa" />
+    <PropertyColumn Property="cliente => cliente.CPFCNPJ" />
+    <PropertyColumn Property="cliente => cliente.InscricaoEstadual" />
+    <PropertyColumn Property="cliente => cliente.Isento" />
+    <PropertyColumn Property="cliente => cliente.Genero" />
+    <PropertyColumn Property="cliente => cliente.Bloqueado" />
+    <PropertyColumn Property="cliente => cliente.Senha" />
+
+    <TemplateColumn Context="cliente">
+        <a href="@($"clientes/edit?id={cliente.Id}")">Edit</a> |
+        <a href="@($"clientes/details?id={cliente.Id}")">Details</a> |
+        <a href="@($"clientes/delete?id={cliente.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>

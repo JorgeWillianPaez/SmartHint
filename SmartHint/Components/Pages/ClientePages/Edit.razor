@@ -1,0 +1,129 @@
+﻿@page "/Clientes/edit"
+@inject SmartHint.Data.SmartHintDbContext DB
+@using SmartHint.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Cliente</h4>
+<hr />
+@if (Cliente is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Cliente" OnValidSubmit="UpdateCliente" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="Cliente.Id" value="@Cliente.Id" />
+                <div class="mb-3">
+                    <label for="nomeclienterazaosocial" class="form-label">NomeClienteRazaoSocial:</label>
+                    <InputText id="nomeclienterazaosocial" @bind-Value="Cliente.NomeClienteRazaoSocial" class="form-control" />
+                    <ValidationMessage For="() => Cliente.NomeClienteRazaoSocial" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email:</label>
+                    <InputText id="email" @bind-Value="Cliente.Email" class="form-control" />
+                    <ValidationMessage For="() => Cliente.Email" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="telefone" class="form-label">Telefone:</label>
+                    <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
+                    <ValidationMessage For="() => Cliente.Telefone" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="tipopessoa" class="form-label">TipoPessoa:</label>
+                    <InputText id="tipopessoa" @bind-Value="Cliente.TipoPessoa" class="form-control" />
+                    <ValidationMessage For="() => Cliente.TipoPessoa" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="cpfcnpj" class="form-label">CPFCNPJ:</label>
+                    <InputText id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" />
+                    <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="inscricaoestadual" class="form-label">InscricaoEstadual:</label>
+                    <InputText id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" />
+                    <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="isento" class="form-label">Isento:</label>
+                    <InputCheckbox id="isento" @bind-Value="Cliente.Isento" class="form-check-input" />
+                    <ValidationMessage For="() => Cliente.Isento" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="genero" class="form-label">Genero:</label>
+                    <InputText id="genero" @bind-Value="Cliente.Genero" class="form-control" />
+                    <ValidationMessage For="() => Cliente.Genero" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="bloqueado" class="form-label">Bloqueado:</label>
+                    <InputCheckbox id="bloqueado" @bind-Value="Cliente.Bloqueado" class="form-check-input" />
+                    <ValidationMessage For="() => Cliente.Bloqueado" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="senha" class="form-label">Senha:</label>
+                    <InputText id="senha" @bind-Value="Cliente.Senha" class="form-control" />
+                    <ValidationMessage For="() => Cliente.Senha" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    public Cliente? Cliente { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cliente ??= await DB.Clientes.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Cliente is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    public async Task UpdateCliente()
+    {
+        DB.Attach(Cliente!).State = EntityState.Modified;
+
+        try
+        {
+            await DB.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ClienteExists(Cliente!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/");
+    }
+
+    bool ClienteExists(int id)
+    {
+        return DB.Clientes.Any(e => e.Id == id);
+    }
+}

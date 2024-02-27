@@ -1,0 +1,79 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject SmartHint.Data.SmartHintDbContext DB
+@using SmartHint.Models
+
+<PageTitle>Início</PageTitle>
+
+<div class="d-flex align-items-center justify-content-between">
+    <h4>
+        Consulte os seus Clientes cadastrados na
+        sua Loja ou realize o cadastro de novos Clientes
+    </h4>
+
+    <a class="btn_addcliente" href="clientes/create">Adicionar Cliente</a>
+</div>
+
+@if (clientes != null && clientes.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in clientes)
+            {
+                <tr>
+                    <td>@cliente.NomeClienteRazaoSocial</td>
+                    <td>@cliente.Email</td>
+                    <td>@cliente.Telefone</td>
+                    <td class="d-flex flex-column">
+                        <a href="@($"clientes/edit?id={cliente.Id}")">
+                            Editar
+                        </a>
+                        <a href="@($"clientes/details?id={cliente.Id}")">
+                            Exibir
+                        </a>
+                        <a href="@($"clientes/delete?id={cliente.Id}")">
+                            Deletar
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Não há clientes para exibir.</p>
+}
+
+<!-- <QuickGrid Class="table" Items="DB.Clientes">
+    <PropertyColumn Property="cliente => cliente.NomeClienteRazaoSocial" />
+    <PropertyColumn Property="cliente => cliente.Email" />
+    <PropertyColumn Property="cliente => cliente.Telefone" />
+    <PropertyColumn Property="cliente => cliente.Bloqueado" />
+    <a>
+        <i class="bi bi-pencil"></i>
+    </a>
+
+    <TemplateColumn Context="cliente">
+        <a href="@($"clientes/edit?id={cliente.Id}")">Edit</a> |
+        <a href="@($"clientes/details?id={cliente.Id}")">Details</a> |
+        <a href="@($"clientes/delete?id={cliente.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>-->
+
+@code {
+    List<Cliente> clientes;
+
+    protected override void OnInitialized()
+    {
+        clientes = DB.Clientes.ToList();
+    }
+}

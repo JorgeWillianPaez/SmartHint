@@ -1,0 +1,89 @@
+﻿@page "/clientes/delete"
+@inject SmartHint.Data.SmartHintDbContext DB
+@using SmartHint.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Cliente</h4>
+    <hr />
+    @if (cliente is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">NomeClienteRazaoSocial</dt>
+            <dd class="col-sm-10">@cliente.NomeClienteRazaoSocial</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@cliente.Email</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Telefone</dt>
+            <dd class="col-sm-10">@cliente.Telefone</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">TipoPessoa</dt>
+            <dd class="col-sm-10">@cliente.TipoPessoa</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CPFCNPJ</dt>
+            <dd class="col-sm-10">@cliente.CPFCNPJ</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">InscricaoEstadual</dt>
+            <dd class="col-sm-10">@cliente.InscricaoEstadual</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Isento</dt>
+            <dd class="col-sm-10">@cliente.Isento</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Genero</dt>
+            <dd class="col-sm-10">@cliente.Genero</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Bloqueado</dt>
+            <dd class="col-sm-10">@cliente.Bloqueado</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Senha</dt>
+            <dd class="col-sm-10">@cliente.Senha</dd>
+        </dl>
+        <EditForm method="post" Model="cliente" OnValidSubmit="DeleteCliente" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(cliente is null)">Delete</button> |
+            <a href="/">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    Cliente? cliente;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        cliente = await DB.Clientes.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (cliente is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    public async Task DeleteCliente()
+    {
+        DB.Clientes.Remove(cliente!);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/clientes");
+    }
+}

@@ -1,0 +1,63 @@
+﻿@page "/clientes/details"
+@inject SmartHint.Data.SmartHintDbContext DB
+@using SmartHint.Models
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Cliente</h4>
+    <hr />
+    @if (cliente is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">NomeClienteRazaoSocial</dt>
+            <dd class="col-sm-10">@cliente.NomeClienteRazaoSocial</dd>
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@cliente.Email</dd>
+            <dt class="col-sm-2">Telefone</dt>
+            <dd class="col-sm-10">@cliente.Telefone</dd>
+            <dt class="col-sm-2">TipoPessoa</dt>
+            <dd class="col-sm-10">@cliente.TipoPessoa</dd>
+            <dt class="col-sm-2">CPFCNPJ</dt>
+            <dd class="col-sm-10">@cliente.CPFCNPJ</dd>
+            <dt class="col-sm-2">InscricaoEstadual</dt>
+            <dd class="col-sm-10">@cliente.InscricaoEstadual</dd>
+            <dt class="col-sm-2">Isento</dt>
+            <dd class="col-sm-10">@cliente.Isento</dd>
+            <dt class="col-sm-2">Genero</dt>
+            <dd class="col-sm-10">@cliente.Genero</dd>
+            <dt class="col-sm-2">Bloqueado</dt>
+            <dd class="col-sm-10">@cliente.Bloqueado</dd>
+            <dt class="col-sm-2">Senha</dt>
+            <dd class="col-sm-10">@cliente.Senha</dd>
+        </dl>
+        <div>
+            <a href="@($"/clientes/edit?id={cliente.Id}")">Edit</a> |
+            <a href="@($"/")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Cliente? cliente;
+
+    [SupplyParameterFromQuery]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        cliente = await DB.Clientes.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (cliente is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
