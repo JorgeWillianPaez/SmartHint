@@ -3,11 +3,10 @@
 @using SmartHint.Models
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Cliente</PageTitle>
 
-<h1>Create</h1>
+<h2>Cadastrar cliente</h2>
 
-<h4>Cliente</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,27 +14,30 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="nomeclienterazaosocial" class="form-label">Nome do Cliente / Razão Social:</label> 
+                <label for="nomeclienterazaosocial" class="form-label">Nome do Cliente/Razão Social:</label> 
                 <InputText id="nomeclienterazaosocial" @bind-Value="Cliente.NomeClienteRazaoSocial" class="form-control" /> 
                 <ValidationMessage For="() => Cliente.NomeClienteRazaoSocial" class="text-danger" /> 
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail:</label> 
-                <input id="email" @bind="Cliente.Email" class="form-control" type="email" /> 
+                <InputText id="email" @bind-Value="Cliente.Email" class="form-control" type="email" />
                 <ValidationMessage For="() => Cliente.Email" class="text-danger" /> 
             </div>
-            <!-- <div class="mb-3">
+            <div class="mb-3">
                 <label for="telefone" class="form-label">Telefone:</label> 
                 <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" /> 
                 <ValidationMessage For="() => Cliente.Telefone" class="text-danger" /> 
             </div>
             <div class="mb-3">
                 <label for="tipopessoa" class="form-label">Tipo de Pessoa:</label> 
-                <InputText id="tipopessoa" @bind-Value="Cliente.TipoPessoa" class="form-control" /> 
+                <InputSelect id="tipopessoa" @bind-Value="Cliente.TipoPessoa" class="form-control">
+                    <option value="Física">Física</option>
+                    <option value="Jurídica">Jurídica</option>
+                </InputSelect>
                 <ValidationMessage For="() => Cliente.TipoPessoa" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="cpfcnpj" class="form-label">CPF / CNPJ:</label> 
+                <label for="cpfcnpj" class="form-label">CPF/CNPJ:</label> 
                 <InputText id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" /> 
                 <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" /> 
             </div>        
@@ -51,10 +53,10 @@
             </div>        
             <div class="mb-3">
                 <label for="genero" class="form-label">Gênero:</label> 
-                <select id="genero" @bind="Cliente.Genero" class="form-control">
+                <InputSelect id="genero" @bind-Value="Cliente.Genero" class="form-control">
                     <option value="Masculino">Masculino</option>
                     <option value="Feminino">Feminino</option>
-                </select>
+                </InputSelect>
                 <ValidationMessage For="() => Cliente.Genero" class="text-danger" /> 
             </div>       
             <div class="mb-3">
@@ -64,9 +66,9 @@
             </div>        
             <div class="mb-3">
                 <label for="senha" class="form-label">Senha:</label> 
-                <InputText id="senha" @bind-Value="Cliente.Senha" class="form-control" /> 
+                <InputText id="senha" @bind-Value="Cliente.Senha" class="form-control" type="password" />
                 <ValidationMessage For="() => Cliente.Senha" class="text-danger" /> 
-            </div> -->
+            </div>
             <button type="submit" class="btn btn-primary">Adicionar Cliente</button>
         </EditForm>
     </div>
@@ -85,6 +87,6 @@
     {
         DB.Clientes.Add(Cliente);
         await DB.SaveChangesAsync();
-        NavigationManager.NavigateTo("/clientes");
+        NavigationManager.NavigateTo("/");
     }
 }

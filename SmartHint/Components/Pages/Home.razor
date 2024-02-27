@@ -14,66 +14,54 @@
     <a class="btn_addcliente" href="clientes/create">Adicionar Cliente</a>
 </div>
 
-@if (clientes != null && clientes.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Telefone</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var cliente in clientes)
-            {
-                <tr>
-                    <td>@cliente.NomeClienteRazaoSocial</td>
-                    <td>@cliente.Email</td>
-                    <td>@cliente.Telefone</td>
-                    <td class="d-flex flex-column">
-                        <a href="@($"clientes/edit?id={cliente.Id}")">
-                            Editar
-                        </a>
-                        <a href="@($"clientes/details?id={cliente.Id}")">
-                            Exibir
-                        </a>
-                        <a href="@($"clientes/delete?id={cliente.Id}")">
-                            Deletar
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Não há clientes para exibir.</p>
-}
+<Grid TItem="Cliente"
+    Class="table table-hover table-bordered table-striped"
+    DataProvider="ClientesDataProvider"
+    AllowPaging="true"
+    PageSize="5"
+    AllowSorting="true"
+    AllowSelection="true"
+    SelectionMode="GridSelectionMode.Multiple"
+    SelectedItemsChanged="OnSelectedItemsChanged"
+    Responsive="true"
+    EmptyText="Nenhum cliente cadastrado.">
 
-<!-- <QuickGrid Class="table" Items="DB.Clientes">
-    <PropertyColumn Property="cliente => cliente.NomeClienteRazaoSocial" />
-    <PropertyColumn Property="cliente => cliente.Email" />
-    <PropertyColumn Property="cliente => cliente.Telefone" />
-    <PropertyColumn Property="cliente => cliente.Bloqueado" />
-    <a>
-        <i class="bi bi-pencil"></i>
-    </a>
-
-    <TemplateColumn Context="cliente">
-        <a href="@($"clientes/edit?id={cliente.Id}")">Edit</a> |
-        <a href="@($"clientes/details?id={cliente.Id}")">Details</a> |
-        <a href="@($"clientes/delete?id={cliente.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>-->
+    <GridColumn TItem="Cliente" HeaderText="NomeClienteRazaoSocial" PropertyName="NomeClienteRazaoSocial" SortKeySelector="item => item.NomeClienteRazaoSocial">
+        @context.NomeClienteRazaoSocial
+    </GridColumn>
+    <GridColumn TItem="Cliente" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
+        @context.Email
+    </GridColumn>
+        <GridColumn TItem="Cliente" HeaderText="Telefone" PropertyName="Telefone" SortKeySelector="item => item.Telefone">
+        @context.Telefone
+    </GridColumn>
+    <GridColumn TItem="Cliente" HeaderText="Ações">
+        <a href="@($"clientes/edit?id={@context.Id}")">Editar</a>
+        <a href="@($"clientes/delete?id={@context.Id}")">Deletar</a>
+    </GridColumn>
+</Grid>
 
 @code {
-    List<Cliente> clientes;
+    private HashSet<Cliente> clientesSelecionados = new();
 
-    protected override void OnInitialized()
+    private IEnumerable<Cliente> clientes = default!;
+
+    private async Task<GridDataProviderResult<Cliente>> ClientesDataProvider(GridDataProviderRequest<Cliente> request)
     {
-        clientes = DB.Clientes.ToList();
+        if (clientes is null)
+            clientes = GetClientes();
+
+        return await Task.FromResult(request.ApplyTo(clientes));
+    }
+
+    private IEnumerable<Cliente> GetClientes()
+    {
+        return DB.Clientes.ToList();
+    }
+
+    private Task OnSelectedItemsChanged(HashSet<Cliente> clientes)
+    {
+        clientesSelecionados = clientes is not null && clientes.Any() ? clientes : new();
+        return Task.CompletedTask;
     }
 }
