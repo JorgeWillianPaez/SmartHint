@@ -12,12 +12,13 @@
 <hr />
 @if (Cliente is null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Carregando...</em></p>
 }
 else
 {
     <div class="row">
         <div class="col-md-4">
+            <a class="btn_deletar text-decoration-none" href="@($"clientes/delete?id={Cliente.Id}")">Deletar</a>
             <EditForm method="post" Model="Cliente" OnValidSubmit="UpdateCliente" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary />
@@ -72,7 +73,10 @@ else
                     <InputText id="senha" @bind-Value="Cliente.Senha" class="form-control" />
                     <ValidationMessage For="() => Cliente.Senha" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <a class="btn_voltar text-white text-decoration-none" href="/">Voltar</a>
+                </div>
             </EditForm>
         </div>
     </div>

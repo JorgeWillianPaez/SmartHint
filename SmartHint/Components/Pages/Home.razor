@@ -5,20 +5,21 @@
 
 <PageTitle>Início</PageTitle>
 
-<div class="d-flex align-items-center justify-content-between">
-    <h4>
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h4 class="w-50">
         Consulte os seus Clientes cadastrados na
         sua Loja ou realize o cadastro de novos Clientes
     </h4>
 
-    <a class="btn_addcliente" href="clientes/create">Adicionar Cliente</a>
+    <button class="btn_menu">Filtrar</button>
+    <a class="btn_menu" href="clientes/create">Adicionar Cliente</a>
 </div>
 
 <Grid TItem="Cliente"
     Class="table table-hover table-bordered table-striped"
     DataProvider="ClientesDataProvider"
     AllowPaging="true"
-    PageSize="5"
+    PageSize="20"
     AllowSorting="true"
     AllowSelection="true"
     SelectionMode="GridSelectionMode.Multiple"
@@ -26,18 +27,20 @@
     Responsive="true"
     EmptyText="Nenhum cliente cadastrado.">
 
-    <GridColumn TItem="Cliente" HeaderText="NomeClienteRazaoSocial" PropertyName="NomeClienteRazaoSocial" SortKeySelector="item => item.NomeClienteRazaoSocial">
+    <GridColumn TItem="Cliente" HeaderText="Nome do Cliente/Razão Social" PropertyName="NomeClienteRazaoSocial" SortKeySelector="item => item.NomeClienteRazaoSocial">
         @context.NomeClienteRazaoSocial
     </GridColumn>
-    <GridColumn TItem="Cliente" HeaderText="Email" PropertyName="Email" SortKeySelector="item => item.Email">
+    <GridColumn TItem="Cliente" HeaderText="E-mail" PropertyName="Email" SortKeySelector="item => item.Email">
         @context.Email
     </GridColumn>
-        <GridColumn TItem="Cliente" HeaderText="Telefone" PropertyName="Telefone" SortKeySelector="item => item.Telefone">
+    <GridColumn TItem="Cliente" HeaderText="Telefone" PropertyName="Telefone" SortKeySelector="item => item.Telefone">
         @context.Telefone
+    </GridColumn>
+    <GridColumn TItem="Cliente" HeaderText="Bloqueado" PropertyName="Bloqueado" SortKeySelector="item => item.Bloqueado">
+        @context.Bloqueado
     </GridColumn>
     <GridColumn TItem="Cliente" HeaderText="Ações">
         <a href="@($"clientes/edit?id={@context.Id}")">Editar</a>
-        <a href="@($"clientes/delete?id={@context.Id}")">Deletar</a>
     </GridColumn>
 </Grid>
 

@@ -5,77 +5,88 @@
 
 <PageTitle>Cliente</PageTitle>
 
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
 <h2>Cadastrar cliente</h2>
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div>
         <EditForm method="post" Model="Cliente" OnValidSubmit="AddCliente" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
-            <div class="mb-3">
-                <label for="nomeclienterazaosocial" class="form-label">Nome do Cliente/Razão Social:</label> 
-                <InputText id="nomeclienterazaosocial" @bind-Value="Cliente.NomeClienteRazaoSocial" class="form-control" /> 
-                <ValidationMessage For="() => Cliente.NomeClienteRazaoSocial" class="text-danger" /> 
+            <div class="d-flex justify-content-between">
+                <div class="mb-3 input_padrao">
+                    <label for="nomeclienterazaosocial" class="form-label">Nome do Cliente/Razão Social:</label>
+                    <InputText id="nomeclienterazaosocial" @bind-Value="Cliente.NomeClienteRazaoSocial" class="form-control" />
+                    <ValidationMessage For="() => Cliente.NomeClienteRazaoSocial" class="text-danger" />
+                </div>
+                <div class="mb-3 input_padrao">
+                    <label for="email" class="form-label">E-mail:</label>
+                    <InputText id="email" @bind-Value="Cliente.Email" class="form-control" type="email" />
+                    <ValidationMessage For="() => Cliente.Email" class="text-danger" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">E-mail:</label> 
-                <InputText id="email" @bind-Value="Cliente.Email" class="form-control" type="email" />
-                <ValidationMessage For="() => Cliente.Email" class="text-danger" /> 
+            <div class="d-flex justify-content-between">
+                <div class="mb-3 input_padrao">
+                    <label for="telefone" class="form-label">Telefone:</label>
+                    <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
+                    <ValidationMessage For="() => Cliente.Telefone" class="text-danger" />
+                </div>
+                <div class="mb-3 input_padrao">
+                    <label for="tipopessoa" class="form-label">Tipo de Pessoa:</label>
+                    <InputSelect id="tipopessoa" @bind-Value="Cliente.TipoPessoa" class="form-control">
+                        <option value="Física">Física</option>
+                        <option value="Jurídica">Jurídica</option>
+                    </InputSelect>
+                    <ValidationMessage For="() => Cliente.TipoPessoa" class="text-danger" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="telefone" class="form-label">Telefone:</label> 
-                <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" /> 
-                <ValidationMessage For="() => Cliente.Telefone" class="text-danger" /> 
+            <div class="d-flex justify-content-between">
+                <div class="mb-3 input_padrao">
+                    <label for="cpfcnpj" class="form-label">CPF/CNPJ:</label>
+                    <InputText id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" />
+                    <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" />
+                </div>
+                <div class="mb-3 input_padrao">
+                    <label for="inscricaoestadual" class="form-label">Inscrição Estadual:</label>
+                    <InputText id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" />
+                    <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="tipopessoa" class="form-label">Tipo de Pessoa:</label> 
-                <InputSelect id="tipopessoa" @bind-Value="Cliente.TipoPessoa" class="form-control">
-                    <option value="Física">Física</option>
-                    <option value="Jurídica">Jurídica</option>
-                </InputSelect>
-                <ValidationMessage For="() => Cliente.TipoPessoa" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="cpfcnpj" class="form-label">CPF/CNPJ:</label> 
-                <InputText id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" /> 
-                <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="inscricaoestadual" class="form-label">Inscrição Estadual:</label> 
-                <InputText id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" /> 
-                <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="isento" class="form-label">Isento:</label> 
-                <InputCheckbox id="isento" @bind-Value="Cliente.Isento" class="form-check-input" /> 
-                <ValidationMessage For="() => Cliente.Isento" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="genero" class="form-label">Gênero:</label> 
-                <InputSelect id="genero" @bind-Value="Cliente.Genero" class="form-control">
-                    <option value="Masculino">Masculino</option>
-                    <option value="Feminino">Feminino</option>
-                </InputSelect>
-                <ValidationMessage For="() => Cliente.Genero" class="text-danger" /> 
-            </div>       
-            <div class="mb-3">
-                <label for="bloqueado" class="form-label">Bloqueado:</label> 
-                <InputCheckbox id="bloqueado" @bind-Value="Cliente.Bloqueado" class="form-check-input" /> 
-                <ValidationMessage For="() => Cliente.Bloqueado" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="senha" class="form-label">Senha:</label> 
-                <InputText id="senha" @bind-Value="Cliente.Senha" class="form-control" type="password" />
-                <ValidationMessage For="() => Cliente.Senha" class="text-danger" /> 
+            <div class="d-flex justify-content-between">
+                <div class="mb-3">
+                    <label for="isento" class="form-label">Isento:</label>
+                    <InputCheckbox id="isento" @bind-Value="Cliente.Isento" class="form-check-input" />
+                    <ValidationMessage For="() => Cliente.Isento" class="text-danger" />
+                </div>
+                <div class="mb-3 input_padrao">
+                    <label for="genero" class="form-label">Gênero:</label>
+                    <InputSelect id="genero" @bind-Value="Cliente.Genero" class="form-control">
+                        <option value="Masculino">Masculino</option>
+                        <option value="Feminino">Feminino</option>
+                    </InputSelect>
+                    <ValidationMessage For="() => Cliente.Genero" class="text-danger" />
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Adicionar Cliente</button>
+            <div class="d-flex justify-content-between">
+                <div class="mb-3">
+                    <label for="bloqueado" class="form-label">Bloqueado:</label>
+                    <InputCheckbox id="bloqueado" @bind-Value="Cliente.Bloqueado" class="form-check-input" />
+                    <ValidationMessage For="() => Cliente.Bloqueado" class="text-danger" />
+                </div>
+                <div class="mb-3 input_padrao">
+                    <label for="senha" class="form-label">Senha:</label>
+                    <InputText id="senha" @bind-Value="Cliente.Senha" class="form-control" type="password" />
+                    <ValidationMessage For="() => Cliente.Senha" class="text-danger" />
+                </div>
+            </div>
+            <div class="d-flex">
+                <button type="submit" class="btn btn-primary">Adicionar Cliente</button>
+                <a class="btn_voltar text-white text-decoration-none" href="/">Voltar</a>
+            </div>
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/">Voltar para lista</a>
 </div>
 
 @code {
@@ -83,10 +94,43 @@
     [SupplyParameterFromForm]
     public Cliente Cliente { get; set; } = new();
 
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private void ShowMessage(ToastType toastType, string mensagem) => messages.Add(CreateToastMessage(toastType, mensagem));
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string mensagem)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Message = mensagem,
+        };
+
     public async Task AddCliente()
     {
+        if (EmailJaExiste())
+        {
+            ShowMessage(ToastType.Danger, "Este e-mail já está cadastrado para outro Cliente");
+            return;
+        }
+
+        if (CPFCNPJaExiste())
+        {
+            ShowMessage(ToastType.Danger, "Este CPF/CNPJ já está cadastrado para outro Cliente");
+            return;
+        }
+
         DB.Clientes.Add(Cliente);
         await DB.SaveChangesAsync();
         NavigationManager.NavigateTo("/");
+    }
+
+    public bool EmailJaExiste()
+    {
+        return DB.Clientes.Any(x => x.Email == Cliente.Email);
+    }
+
+    public bool CPFCNPJaExiste()
+    {
+        return DB.Clientes.Any(x => x.CPFCNPJ == Cliente.CPFCNPJ);
     }
 }

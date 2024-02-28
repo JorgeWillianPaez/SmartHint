@@ -1,15 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
+<div class="d-flex flex-column align-items-center justify-content-between vh-100">
+    <div class="w-100">
         <NavMenu />
     </div>
 
     <main>
-        <article class="content px-4">
+        <article class="content px-4 w-100 mt-5">
             @Body
         </article>
     </main>
+
+    <footer class="footer"></footer>
 </div>
 
 <div id="blazor-error-ui">
