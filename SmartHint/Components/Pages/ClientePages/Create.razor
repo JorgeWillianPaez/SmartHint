@@ -2,6 +2,7 @@
 @inject SmartHint.Data.SmartHintDbContext DB
 @using SmartHint.Models
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Cliente</PageTitle>
 
@@ -78,6 +79,7 @@
                             <label for="genero" class="form-label">Gênero:</label>
                             <Tooltip Title="Selecione o gênero do Cliente." Placement="TooltipPlacement.Right">
                                 <InputSelect id="genero" @bind-Value="Cliente.Genero" class="form-control">
+                                    <option value="" disabled selected >Selecione...</option>
                                     <option value="Masculino">Masculino</option>
                                     <option value="Feminino">Feminino</option>
                                     <option value="Outro">Outro</option>
@@ -134,9 +136,6 @@
                     <a class="btn text-decoration-none me-2" href="/">Voltar</a>
                     <button type="submit" class="btn">Adicionar Cliente</button>
                 </div>
-            </fieldset>
-            <fieldset>
-
             </fieldset>
         </EditForm>
     </div>

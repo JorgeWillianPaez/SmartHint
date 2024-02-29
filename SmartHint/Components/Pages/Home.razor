@@ -6,13 +6,19 @@
 <PageTitle>Início</PageTitle>
 
 <div class="d-flex align-items-center justify-content-between mb-4">
-    <h4 class="w-50">
+    <h4 class="w-75">
         Consulte os seus Clientes cadastrados na
         sua Loja ou realize o cadastro de novos Clientes
     </h4>
-
-    <button class="btn_menu">Filtrar</button>
-    <a class="btn_menu" href="clientes/create">Adicionar Cliente</a>
+    <a class="btn btn-primary" href="clientes/create">Adicionar Cliente</a>
+</div>
+<div class="d-flex align-items-center mb-4">
+    <button onclick="@LimparFiltros" class="btn btn-primary col-2">Limpar filtros</button>
+    <button onclick="@MostrarFiltros" class="btn btn-primary col-1 mx-3">Filtrar</button>
+    @if (mostrarFiltros)
+    {
+        <button onclick="@FiltrarClientes" class="btn btn-primary">Aplicar filtros</button>
+    }
 </div>
 
 @if (clientes is null)
@@ -20,62 +26,101 @@
     <p><em>Carregando...</em></p>
 } else
 {
-    <Grid TItem="Cliente"
-          Class="table table-hover table-bordered table-striped"
-          DataProvider="ClientesDataProvider"
-          AllowPaging="true"
-          PageSize="20"
-          AllowSorting="true"
-          AllowSelection="true"
-          SelectionMode="GridSelectionMode.Multiple"
-          SelectedItemsChanged="OnSelectedItemsChanged"
-          Responsive="true"
-          EmptyText="Nenhum cliente cadastrado.">
-
-        <GridColumn TItem="Cliente" HeaderText="Nome/Razão Social" PropertyName="NomeClienteRazaoSocial" SortKeySelector="item => item.NomeClienteRazaoSocial">
-            @context.NomeClienteRazaoSocial
-        </GridColumn>
-        <GridColumn TItem="Cliente" HeaderText="E-mail" PropertyName="Email" SortKeySelector="item => item.Email">
-            @context.Email
-        </GridColumn>
-        <GridColumn TItem="Cliente" HeaderText="Telefone" PropertyName="Telefone" SortKeySelector="item => item.Telefone">
-            @context.Telefone
-        </GridColumn>
-        <GridColumn TItem="Cliente" HeaderText="Data de Cadastro" PropertyName="DataCadastro" SortKeySelector="item => item.DataCadastro">
-            @context.DataCadastro.ToString("dd/MM/yyyy")
-        </GridColumn>
-        <GridColumn TItem="Cliente" HeaderText="Bloqueado" PropertyName="Bloqueado" SortKeySelector="item => item.Bloqueado">
-            @if (context.Bloqueado == true)
+        @if (mostrarFiltros)
+        {
+            <div class="filtros mb-3">
+                <div class="row gx-4 mb-3">
+                    <div class="input-group col">
+                        <input value="@filtroNomeInput" @oninput="AtualizarFiltroNome" id="nomeclienterazaosocial" placeholder="Nome ou Razão Social do Cliente" class="form-control" />
+                    </div>
+                    <div class="input-group col">
+                        <input value="@filtroEmailInput" @oninput="AtualizarFiltroEmail" id="email" placeholder="E-mail do Cliente" class="form-control" />
+                    </div>
+                    <div class="input-group col">
+                        <input value="@filtroTelefoneInput" @oninput="AtualizarFiltroTelefone" id="telefone" type="number" placeholder="Telefone do Cliente" class="form-control" />
+                    </div>
+                    <div class="input-group col">
+                        <input value="@filtroDataInput" @oninput="AtualizarFiltroData" id="dataCadastro" placeholder="Selecione uma data ou período" class="form-control" type="date" />
+                    </div>
+                </div>
+                <div>
+                    <div class="input-group">
+                        <label for="bloqueado" class="form-label">Bloqueado:</label>
+                        <select @onchange="AtualizarFiltroBloqueado" id="bloqueado" class="form-control">
+                            <option value="">Selecione uma opção</option>
+                            <option value="Sim">Sim</option>
+                            <option value="Nao">Não</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        }
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Nome/Razão Social</th>
+                    <th scope="col">E-mail</th>
+                    <th scope="col">Telefone</th>
+                    <th scope="col">Data de Cadastro</th>
+                    <th scope="col">Bloqueado</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (clientes.Count() > 0)
             {
-                <td>Sim</td>
-            }
-            else
+                @foreach(Cliente cliente in clientes)
+                {
+                    <tr>
+                        <td>@cliente.NomeClienteRazaoSocial</td>
+                        <td>@cliente.Email</td>
+                        <td>@cliente.Telefone</td>
+                        <td>@cliente.DataCadastro.ToString("dd/MM/yyyy")</td>
+                        @if (cliente.Bloqueado == true)
+                        {
+                            <td>Sim</td>
+                        }
+                        else
+                        {
+                            <td>Não</td>
+                        }
+                        <td>
+                            <a class="btn btn-primary" href="@($"clientes/edit?id={@cliente.Id}")">Editar</a>
+                        </td>
+                    </tr>
+                }
+            } else
             {
-                <td>Não</td>
+                <p>Nenhum cliente cadastrado...</p>
             }
-        </GridColumn>
-        <GridColumn TItem="Cliente" HeaderText="Ações">
-            <a href="@($"clientes/edit?id={@context.Id}")">Editar</a>
-        </GridColumn>
-    </Grid>
+            </tbody>
+        </table>
 }
 
 @code {
-    private HashSet<Cliente> clientesSelecionados = new();
-
     private IEnumerable<Cliente> clientes = default!;
+
+    private bool mostrarFiltros = false;
+
+    private string filtroNome = string.Empty;
+    private string filtroNomeInput = string.Empty;
+    private string filtroEmail = string.Empty;
+    private string filtroEmailInput = string.Empty;
+    private string filtroTelefone = string.Empty;
+    private string filtroTelefoneInput = string.Empty;
+    private DateTime? filtroData = null;
+    private DateTime? filtroDataInput = null;
+    private string filtroBloqueado = null;
+    private string filtroBloqueadoInput = null;
 
     protected override void OnInitialized()
     {
         clientes = GetClientes();
     }
 
-    private async Task<GridDataProviderResult<Cliente>> ClientesDataProvider(GridDataProviderRequest<Cliente> request)
+    private void MostrarFiltros()
     {
-        if (clientes is null)
-            clientes = GetClientes();
-
-        return await Task.FromResult(request.ApplyTo(clientes));
+        mostrarFiltros = !mostrarFiltros;
     }
 
     private IEnumerable<Cliente> GetClientes()
@@ -83,9 +128,110 @@
         return DB.Clientes.ToList();
     }
 
-    private Task OnSelectedItemsChanged(HashSet<Cliente> clientes)
+    private void LimparFiltros()
     {
-        clientesSelecionados = clientes is not null && clientes.Any() ? clientes : new();
-        return Task.CompletedTask;
+        filtroNome = string.Empty;
+        filtroNomeInput = string.Empty;
+        filtroEmail = string.Empty;
+        filtroEmailInput = string.Empty;
+        filtroTelefone = string.Empty;
+        filtroTelefoneInput = string.Empty;
+        filtroData = null;
+        filtroDataInput = null;
+        filtroBloqueado = string.Empty;
+        filtroBloqueadoInput = string.Empty;
+
+        clientes = GetClientes();
+    }
+
+    private void FiltrarClientes()
+    {
+        clientes = GetClientes();
+        if (filtroNomeInput != "")
+        {
+            filtroNome = filtroNomeInput;
+            clientes = FiltrarPorNomeRazao();
+        }
+        if (filtroEmailInput != "")
+        {
+            filtroEmail = filtroEmailInput;
+            clientes = FiltrarPorEmail(clientes);
+        }
+        if (filtroTelefoneInput != "")
+        {
+            filtroTelefone = filtroTelefoneInput;
+            clientes = FiltrarPorTelefone(clientes);
+        }
+        if (filtroDataInput is not null)
+        {
+            filtroData = filtroDataInput;
+            clientes = FiltrarPorData(clientes);
+        }
+        if (filtroBloqueadoInput != "")
+        {
+            filtroBloqueado = filtroBloqueadoInput;
+            clientes = FiltrarPorBloqueado(clientes);
+        }
+
+        mostrarFiltros = false;
+    }
+
+    private IEnumerable<Cliente> FiltrarPorNomeRazao()
+    {
+        return DB.Clientes.Where(x => x.NomeClienteRazaoSocial.Contains(filtroNome));
+    }
+
+    private IEnumerable<Cliente> FiltrarPorEmail(IEnumerable<Cliente> clientes)
+    {
+        return clientes.Where(x => x.Email.Contains(filtroEmail));
+    }
+
+    private IEnumerable<Cliente> FiltrarPorTelefone(IEnumerable<Cliente> clientes)
+    {
+        return clientes.Where(x => x.Telefone.Contains(filtroTelefone));
+    }
+
+    private IEnumerable<Cliente> FiltrarPorData(IEnumerable<Cliente> clientes)
+    {
+        return clientes.Where(x => x.DataCadastro == filtroData);
+    }
+
+    private IEnumerable<Cliente> FiltrarPorBloqueado(IEnumerable<Cliente> clientes)
+    {
+        if (filtroBloqueado == "Sim")
+        {
+            return clientes.Where(x => x.Bloqueado == true);
+        }
+        else if (filtroBloqueado == "Nao")
+        {
+            return clientes.Where(x => x.Bloqueado == false);
+        }
+
+        return clientes;
+    }
+
+    private void AtualizarFiltroNome(ChangeEventArgs e)
+    {
+        filtroNomeInput = e.Value.ToString();
+    }
+
+    private void AtualizarFiltroEmail(ChangeEventArgs e)
+    {
+        filtroEmailInput = e.Value.ToString();
+    }
+
+    private void AtualizarFiltroTelefone(ChangeEventArgs e)
+    {
+        filtroTelefoneInput = e.Value.ToString();
+    }
+
+    private void AtualizarFiltroData(ChangeEventArgs e)
+    {
+        filtroDataInput = DateTime.Parse(e.Value.ToString());
+    }
+
+    private void AtualizarFiltroBloqueado(ChangeEventArgs e)
+    {
+        filtroBloqueadoInput = e.Value.ToString();
     }
 }
