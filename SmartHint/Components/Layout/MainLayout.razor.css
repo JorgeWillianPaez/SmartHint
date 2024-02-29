@@ -4,7 +4,13 @@ main {
     width: 60%;
 }
 
+article {
+    margin-bottom: 125px;
+}
+
 .footer {
+    position: fixed;
+    bottom: 0;
     background-color: #0C3C96;
     width: 100%;
     height: 4.5rem;

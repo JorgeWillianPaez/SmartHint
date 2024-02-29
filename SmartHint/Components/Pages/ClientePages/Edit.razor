@@ -35,7 +35,7 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="telefone" class="form-label">Telefone:</label>
-                    <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
+                    <InputNumber id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
                     <ValidationMessage For="() => Cliente.Telefone" class="text-danger" />
                 </div>
                 <div class="mb-3">
@@ -45,12 +45,12 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="cpfcnpj" class="form-label">CPFCNPJ:</label>
-                    <InputText id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" />
+                    <InputNumber id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" />
                     <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="inscricaoestadual" class="form-label">InscricaoEstadual:</label>
-                    <InputText id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" />
+                    <InputNumber id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" />
                     <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" />
                 </div>
                 <div class="mb-3">
