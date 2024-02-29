@@ -15,39 +15,60 @@
     <a class="btn_menu" href="clientes/create">Adicionar Cliente</a>
 </div>
 
-<Grid TItem="Cliente"
-    Class="table table-hover table-bordered table-striped"
-    DataProvider="ClientesDataProvider"
-    AllowPaging="true"
-    PageSize="20"
-    AllowSorting="true"
-    AllowSelection="true"
-    SelectionMode="GridSelectionMode.Multiple"
-    SelectedItemsChanged="OnSelectedItemsChanged"
-    Responsive="true"
-    EmptyText="Nenhum cliente cadastrado.">
+@if (clientes is null)
+{
+    <p><em>Carregando...</em></p>
+} else
+{
+    <Grid TItem="Cliente"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="ClientesDataProvider"
+          AllowPaging="true"
+          PageSize="20"
+          AllowSorting="true"
+          AllowSelection="true"
+          SelectionMode="GridSelectionMode.Multiple"
+          SelectedItemsChanged="OnSelectedItemsChanged"
+          Responsive="true"
+          EmptyText="Nenhum cliente cadastrado.">
 
-    <GridColumn TItem="Cliente" HeaderText="Nome do Cliente/Razão Social" PropertyName="NomeClienteRazaoSocial" SortKeySelector="item => item.NomeClienteRazaoSocial">
-        @context.NomeClienteRazaoSocial
-    </GridColumn>
-    <GridColumn TItem="Cliente" HeaderText="E-mail" PropertyName="Email" SortKeySelector="item => item.Email">
-        @context.Email
-    </GridColumn>
-    <GridColumn TItem="Cliente" HeaderText="Telefone" PropertyName="Telefone" SortKeySelector="item => item.Telefone">
-        @context.Telefone
-    </GridColumn>
-    <GridColumn TItem="Cliente" HeaderText="Bloqueado" PropertyName="Bloqueado" SortKeySelector="item => item.Bloqueado">
-        @context.Bloqueado
-    </GridColumn>
-    <GridColumn TItem="Cliente" HeaderText="Ações">
-        <a href="@($"clientes/edit?id={@context.Id}")">Editar</a>
-    </GridColumn>
-</Grid>
+        <GridColumn TItem="Cliente" HeaderText="Nome/Razão Social" PropertyName="NomeClienteRazaoSocial" SortKeySelector="item => item.NomeClienteRazaoSocial">
+            @context.NomeClienteRazaoSocial
+        </GridColumn>
+        <GridColumn TItem="Cliente" HeaderText="E-mail" PropertyName="Email" SortKeySelector="item => item.Email">
+            @context.Email
+        </GridColumn>
+        <GridColumn TItem="Cliente" HeaderText="Telefone" PropertyName="Telefone" SortKeySelector="item => item.Telefone">
+            @context.Telefone
+        </GridColumn>
+        <GridColumn TItem="Cliente" HeaderText="Data de Cadastro" PropertyName="DataCadastro" SortKeySelector="item => item.DataCadastro">
+            @context.DataCadastro.ToString("dd/MM/yyyy")
+        </GridColumn>
+        <GridColumn TItem="Cliente" HeaderText="Bloqueado" PropertyName="Bloqueado" SortKeySelector="item => item.Bloqueado">
+            @if (context.Bloqueado == true)
+            {
+                <td>Sim</td>
+            }
+            else
+            {
+                <td>Não</td>
+            }
+        </GridColumn>
+        <GridColumn TItem="Cliente" HeaderText="Ações">
+            <a href="@($"clientes/edit?id={@context.Id}")">Editar</a>
+        </GridColumn>
+    </Grid>
+}
 
 @code {
     private HashSet<Cliente> clientesSelecionados = new();
 
     private IEnumerable<Cliente> clientes = default!;
+
+    protected override void OnInitialized()
+    {
+        clientes = GetClientes();
+    }
 
     private async Task<GridDataProviderResult<Cliente>> ClientesDataProvider(GridDataProviderRequest<Cliente> request)
     {

@@ -6,85 +6,149 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
+<h1>Editar Cliente</h1>
 
-<h4>Cliente</h4>
-<hr />
 @if (Cliente is null)
 {
     <p><em>Carregando...</em></p>
 }
 else
 {
+    <div class="d-flex justify-content-between">
+        <h4>Cliente</h4>
+        <a class="btn btn-danger text-decoration-none" href="@($"clientes/delete?id={Cliente.Id}")">Excluir cliente</a>
+    </div>
+    
+    <hr />
+
     <div class="row">
-        <div class="col-md-4">
-            <a class="btn_deletar text-decoration-none" href="@($"clientes/delete?id={Cliente.Id}")">Deletar</a>
+        <div>
             <EditForm method="post" Model="Cliente" OnValidSubmit="UpdateCliente" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
-                <ValidationSummary />
-                <input type="hidden" name="Cliente.Id" value="@Cliente.Id" />
-                <div class="mb-3">
-                    <label for="nomeclienterazaosocial" class="form-label">NomeClienteRazaoSocial:</label>
-                    <InputText id="nomeclienterazaosocial" @bind-Value="Cliente.NomeClienteRazaoSocial" class="form-control" />
-                    <ValidationMessage For="() => Cliente.NomeClienteRazaoSocial" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email:</label>
-                    <InputText id="email" @bind-Value="Cliente.Email" class="form-control" />
-                    <ValidationMessage For="() => Cliente.Email" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="telefone" class="form-label">Telefone:</label>
-                    <InputNumber id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
-                    <ValidationMessage For="() => Cliente.Telefone" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="tipopessoa" class="form-label">TipoPessoa:</label>
-                    <InputText id="tipopessoa" @bind-Value="Cliente.TipoPessoa" class="form-control" />
-                    <ValidationMessage For="() => Cliente.TipoPessoa" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="cpfcnpj" class="form-label">CPFCNPJ:</label>
-                    <InputNumber id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" />
-                    <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="inscricaoestadual" class="form-label">InscricaoEstadual:</label>
-                    <InputNumber id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" />
-                    <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="isento" class="form-label">Isento:</label>
-                    <InputCheckbox id="isento" @bind-Value="Cliente.Isento" class="form-check-input" />
-                    <ValidationMessage For="() => Cliente.Isento" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="genero" class="form-label">Genero:</label>
-                    <InputText id="genero" @bind-Value="Cliente.Genero" class="form-control" />
-                    <ValidationMessage For="() => Cliente.Genero" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="bloqueado" class="form-label">Bloqueado:</label>
-                    <InputCheckbox id="bloqueado" @bind-Value="Cliente.Bloqueado" class="form-check-input" />
-                    <ValidationMessage For="() => Cliente.Bloqueado" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="senha" class="form-label">Senha:</label>
-                    <InputText id="senha" @bind-Value="Cliente.Senha" class="form-control" />
-                    <ValidationMessage For="() => Cliente.Senha" class="text-danger" />
-                </div>
-                <div class="d-flex">
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    <a class="btn_voltar text-white text-decoration-none" href="/">Voltar</a>
-                </div>
+                <fieldset class="mb-5">
+                    <legend>Informações principais</legend>
+                    <div class="d-flex mb-3 justify-content-between">
+                        <div class="input_padrao">
+                            <label for="nomeclienterazaosocial" class="form-label">Nome do Cliente/Razão Social:</label>
+                            <Tooltip Title="Nome completo ou Razão Social do Cliente." Placement="TooltipPlacement.Left">
+                                <InputText id="nomeclienterazaosocial" @bind-Value="Cliente.NomeClienteRazaoSocial" class="form-control" />
+                            </Tooltip>
+                            <ValidationMessage For="() => Cliente.NomeClienteRazaoSocial" class="text-danger" />
+                        </div>
+                        <div class="input_padrao">
+                            <label for="email" class="form-label">E-mail:</label>
+                            <Tooltip Title="E-mail do Cliente." Placement="TooltipPlacement.Right">
+                                <InputText id="email" @bind-Value="Cliente.Email" class="form-control" type="email" />
+                            </Tooltip>
+                            <ValidationMessage For="() => Cliente.Email" class="text-danger" />
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="input_padrao">
+                            <label for="telefone" class="form-label">Telefone:</label>
+                            <Tooltip Title="Telefone do Cliente." Placement="TooltipPlacement.Left">
+                                <InputNumber id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
+                            </Tooltip>
+                            <ValidationMessage For="() => Cliente.Telefone" class="text-danger" />
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="mb-5">
+                    <legend>Informações pessoais</legend>
+                    <div class="d-flex mb-3 justify-content-between">
+                        <div class="input_padrao">
+                            <label for="tipopessoa" class="form-label">Tipo de Pessoa:</label>
+                            <Tooltip Title="Selecione o tipo de Pessoa" Placement="TooltipPlacement.Left">
+                                <InputSelect id="tipopessoa" @bind-Value="Cliente.TipoPessoa" class="form-control">
+                                    <option value="Física">Física</option>
+                                    <option value="Jurídica">Jurídica</option>
+                                </InputSelect>
+                            </Tooltip>
+                            <ValidationMessage For="() => Cliente.TipoPessoa" class="text-danger" />
+                        </div>
+                        <div class="input_padrao">
+                            <label for="cpfcnpj" class="form-label">CPF/CNPJ:</label>
+                            <Tooltip Title="Insira o CPF ou o CNPJ do Cliente." Placement="TooltipPlacement.Right">
+                                <InputNumber id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" />
+                            </Tooltip>
+                            <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" />
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3 justify-content-between">
+                        <div class="input_padrao">
+                            <label for="inscricaoestadual" class="form-label">Inscrição Estadual:</label>
+                            <Tooltip Title="Inscrição Estadual do Cliente, selecionar Isento caso assim for." Placement="TooltipPlacement.Left">
+                                <InputNumber id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" />
+                            </Tooltip>
+                            <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" />
+                        </div>
+                        @if (Cliente.TipoPessoa == "Física")
+                        {
+                            <div class="input_padrao">
+                                <label for="genero" class="form-label">Gênero:</label>
+                                <Tooltip Title="Selecione o gênero do Cliente." Placement="TooltipPlacement.Right">
+                                    <InputSelect id="genero" @bind-Value="Cliente.Genero" class="form-control">
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Feminino">Feminino</option>
+                                        <option value="Outro">Outro</option>
+                                    </InputSelect>
+                                </Tooltip>
+                                <ValidationMessage For="() => Cliente.Genero" class="text-danger" />
+                            </div>
+                        }
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div>
+                            <div class="d-flex justify-content-between">
+                                <label for="isento" class="form-label">Isento:</label>
+                                <InputCheckbox id="isento" @bind-Value="Cliente.Isento" class="form-check-input" />
+                                <ValidationMessage For="() => Cliente.Isento" class="text-danger" />
+                            </div>
+                            <div>
+                                <label for="bloqueado" class="form-label">Bloqueado:</label>
+                                <Tooltip Title="Bloquear o acesso do Cliente na sua Loja." Placement="TooltipPlacement.Left">
+                                    <InputCheckbox id="bloqueado" @bind-Value="Cliente.Bloqueado" class="form-check-input" />
+                                </Tooltip>
+                                <ValidationMessage For="() => Cliente.Bloqueado" class="text-danger" />
+                            </div>
+                        </div>
+                        @if (Cliente.TipoPessoa == "Física")
+                        {
+                            <div class="input_padrao">
+                                <label for="dataNascimento" class="form-label">Data de Nascimento:</label>
+                                <Tooltip Title="Data de nascimento do Cliente." Placement="TooltipPlacement.Right">
+                                    <InputDate id="dataNascimento" @bind-Value="Cliente.DataNascimento" class="form-control" />
+                                </Tooltip>
+                                <ValidationMessage For="() => Cliente.Genero" class="text-danger" />
+                            </div>
+                        }
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Senha de Acesso</legend>
+                    <div class="d-flex mb-5 justify-content-between">
+                        <div class="input_padrao">
+                            <label for="senha" class="form-label">Senha:</label>
+                            <Tooltip Title="Cadastre a senha de acesso do seu Cliente." Placement="TooltipPlacement.Left">
+                                <InputText id="senha" @bind-Value="Cliente.Senha" class="form-control" type="password" />
+                            </Tooltip>
+                            <ValidationMessage For="() => Cliente.Senha" class="text-danger" />
+                        </div>
+                        <div class="input_padrao">
+                            <label for="confirmarSenha" class="form-label">Confirmar senha:</label>
+                            <InputText id="confirmarSenha" @bind-Value="Cliente.ConfirmarSenha" class="form-control" type="password" />
+                            <ValidationMessage For="() => Cliente.ConfirmarSenha" class="text-danger" />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <a class="btn btn-primary text-decoration-none me-2" href="/">Voltar</a>
+                        <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                    </div>
+                </fieldset>
             </EditForm>
         </div>
     </div>
 }
-
-<div>
-    <a class="mt-1" href="/">Voltar para a lista</a>
-</div>
 
 @code {
     [SupplyParameterFromQuery]

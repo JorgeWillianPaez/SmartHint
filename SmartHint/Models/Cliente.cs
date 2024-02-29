@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace SmartHint.Models
 {
@@ -10,7 +12,7 @@ namespace SmartHint.Models
         public string NomeClienteRazaoSocial { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
         [MaxLength(150, ErrorMessage = "Máximo de 150 caracteres")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "O endereço de e-mail não é válido")]
         public string Email { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
         public int Telefone { get; set; }
@@ -22,7 +24,7 @@ namespace SmartHint.Models
         public bool Isento { get; set; } = false;
         [Required(ErrorMessage = "Campo obrigatório")]
         public string Genero { get; set; } = string.Empty;
-        public DateOnly DataNascimento {  get; set; }
+        public DateTime DataNascimento {  get; set; }
         public bool Bloqueado { get; set; } = false;
         [Required(ErrorMessage = "Campo obrigatório")]
         //[MinLength(11, ErrorMessage = "Mínimo 8 caracteres")]
@@ -30,6 +32,8 @@ namespace SmartHint.Models
         public string Senha { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
         [Compare("Senha", ErrorMessage = "As senhas não conferem")]
+        [NotMapped]
         public string ConfirmarSenha { get; set; } = string.Empty;
+        public DateTime DataCadastro { get; set; }
     }
 }
