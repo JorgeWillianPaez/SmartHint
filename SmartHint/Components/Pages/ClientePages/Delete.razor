@@ -63,6 +63,16 @@
             </dl>
         </div>
         <div class="d-flex justify-content-between">
+            <dl class="col">
+                <dt>Data de Cadastro</dt>
+                <dd>@cliente.DataCadastro.ToString("dd/MM/yyyy")</dd>
+            </dl>
+            <dl class="col">
+                <dt>Data de Nascimento</dt>
+                <dd>@cliente.DataNascimento</dd>
+            </dl>
+        </div>
+        <div class="d-flex justify-content-between">
             <dl class="col" >
                 <dt>Bloqueado</dt>
                 @if (cliente.Bloqueado == true)

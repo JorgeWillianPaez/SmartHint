@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject SmartHint.Data.SmartHintDbContext DB
 @using SmartHint.Models
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Início</PageTitle>
 
@@ -75,6 +76,9 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col">
+                    <input type="checkbox" id="selectAll" @onchange="@((ChangeEventArgs args) => HandleCheckboxChange(args))" />
+                    </th>
                     <th scope="col">Nome/Razão Social</th>
                     <th scope="col">E-mail</th>
                     <th scope="col">Telefone</th>
@@ -89,6 +93,9 @@
                 @foreach(Cliente cliente in clientes)
                 {
                     <tr>
+                        <td>
+                            <input type="checkbox" class="clienteCheckbox" data-cliente-id="@cliente.Id" />
+                        </td>
                         <td>@cliente.NomeClienteRazaoSocial</td>
                         <td>@cliente.Email</td>
                         <td>@cliente.Telefone</td>
@@ -108,7 +115,9 @@
                 }
             } else
             {
-                <p>Nenhum cliente cadastrado...</p>
+                <tr>
+                    <td colspan="7">Nenhum cliente cadastrado...</td>
+                </tr>
             }
             </tbody>
         </table>
@@ -142,6 +151,8 @@
     private string filtroBloqueado = string.Empty;
     private string filtroBloqueadoInput = string.Empty;
 
+    private IJSObjectReference? module;
+
     private int paginaAtual = 1;
     private int totalPaginas = 0;
 
@@ -160,6 +171,13 @@
         int registrosASkipar = registrosPorPagina * (newPageNumber - 1);
         clientes = DB.Clientes.Skip(registrosASkipar).Take(registrosPorPagina).ToList();
         await Task.Run(() => { paginaAtual = newPageNumber; });
+    }
+
+    private async void HandleCheckboxChange(ChangeEventArgs e)
+    {
+        module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/Home.razor.js");
+
+        await module.InvokeVoidAsync("selectAllCheckBoxes");
     }
 
     private void MostrarFiltros()
@@ -219,6 +237,8 @@
             filtroBloqueado = string.Empty;
             filtroBloqueadoInput = string.Empty;
         }
+
+        totalPaginas = Convert.ToInt32(Math.Ceiling((double)clientes.Count() / 20));
     }
 
     private void FiltrarClientes()

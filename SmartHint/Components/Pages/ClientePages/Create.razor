@@ -64,7 +64,7 @@
                     <div class="input_padrao">
                         <label for="cpfcnpj" class="form-label">CPF/CNPJ:</label>
                         <Tooltip Title="Insira o CPF ou o CNPJ do Cliente." Placement="TooltipPlacement.Right">
-                            <InputText id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                            <InputText id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" @oninput="AplicarMascara" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                         </Tooltip>
                         <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" />
                     </div>
@@ -75,7 +75,6 @@
                         <Tooltip Title="Inscrição Estadual do Cliente, selecionar Isento caso assim for." Placement="TooltipPlacement.Left">
                             <InputMask id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" data-mask="000.000.000.000" disabled="@inscricaoEstadualDisabled" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                         </Tooltip>
-                        <!-- <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" /> -->
                     </div>
                     @if (Cliente.TipoPessoa == "Física")
                     {
@@ -159,9 +158,12 @@
         if (firstRender)
         {
             module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/ClientePages/Create.razor.js");
-
-            await module.InvokeVoidAsync("mask");
         }
+    }
+
+    private async Task AplicarMascara(ChangeEventArgs e)
+    {
+        await module.InvokeVoidAsync("cpfCnpjMask");
     }
 
     private void ShowMessage(ToastType toastType, string mensagem) => messages.Add(CreateToastMessage(toastType, mensagem));

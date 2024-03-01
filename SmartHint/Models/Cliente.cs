@@ -20,7 +20,6 @@ namespace SmartHint.Models
         [Required(ErrorMessage = "Campo obrigatório")]
         public string TipoPessoa { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
-        //[RegularExpression(@"^\d{14}(?:\d{6})?$", ErrorMessage = "Campo deve conter 11 ou 15 dígitos.")]
         public string CPFCNPJ { get; set; } = string.Empty;
         public string InscricaoEstadual { get; set; } = string.Empty;
         public bool Isento { get; set; } = false;
