@@ -19,8 +19,6 @@ create table Clientes(
     primary key(Id)
 );
 
-SELECT * FROM Clientes;
-
 INSERT INTO Clientes (NomeClienteRazaoSocial, Email, Telefone, DataNascimento, Senha, TipoPessoa, CPFCNPJ, InscricaoEstadual, Isento, Genero, Bloqueado, DataCadastro)
 VALUES 
     ('João Silva', 'joao@example.com', '(11)12345-6789', '1980-01-01', 'senha123', 'Física', '123.456.789-00', '123.456.789.123', FALSE, 'Masculino', TRUE, '2024-03-01'),
@@ -54,3 +52,4 @@ VALUES
     ('Empresa N S/A', 'empresa.n@example.com', '(44)45678-9012', NULL, 'senhaabc', 'Jurídica', '32.165.498/0001-01', '321.654.987.654', FALSE, '', FALSE, '2024-02-15'),
     ('Empresa O ME', 'empresa.o@example.com', '(55)56789-0123', NULL, 'senhabcd', 'Jurídica', '56.789.012/0001-01', '567.890.123.456', FALSE, '', TRUE, '2024-03-20');
 
+SELECT * FROM Clientes;
