@@ -43,7 +43,7 @@
                         </button>
                     </div>
                     <div class="input-group col">
-                        <input value="@filtroTelefoneInput" @oninput="AtualizarFiltroTelefone" id="telefone" type="number" placeholder="Telefone do Cliente" class="form-control" />
+                    <InputMask @bind-Value="filtroTelefoneInput" @oninput="AtualizarFiltroTelefone" id="telefone" onkeypress="return event.charCode >= 48 && event.charCode <= 57" data-mask="(00)00000-0000" placeholder="Telefone do Cliente" class="form-control" />
                         <button class="btn btn-danger" @onclick='() => LimparFiltroEspecifico("telefone")'>
                             <img class="btn_lixeira" src="assets/trash.png" alt="Lixeira filtro" />
                         </button>
@@ -112,6 +112,9 @@
             }
             </tbody>
         </table>
+    <Pagination ActivePageNumber="@paginaAtual"
+                TotalPages="totalPaginas"
+                PageChanged="OnPageChangedAsync" class="d-flex justify-content-center" />
 }
 
 @code {
@@ -139,9 +142,24 @@
     private string filtroBloqueado = string.Empty;
     private string filtroBloqueadoInput = string.Empty;
 
+    private int paginaAtual = 1;
+    private int totalPaginas = 0;
+
     protected override void OnInitialized()
     {
         clientes = GetClientes();
+
+        totalPaginas = Convert.ToInt32(Math.Ceiling((double)DB.Clientes.ToList().Count() / 20));
+
+        Console.WriteLine();
+    }
+
+    private async Task OnPageChangedAsync(int newPageNumber)
+    {
+        int registrosPorPagina = 20;
+        int registrosASkipar = registrosPorPagina * (newPageNumber - 1);
+        clientes = DB.Clientes.Skip(registrosASkipar).Take(registrosPorPagina).ToList();
+        await Task.Run(() => { paginaAtual = newPageNumber; });
     }
 
     private void MostrarFiltros()
@@ -151,7 +169,9 @@
 
     private IEnumerable<Cliente> GetClientes()
     {
-        return DB.Clientes.ToList();
+        int registrosPorPagina = 20;
+        int registrosASkipar = registrosPorPagina * (paginaAtual - 1);
+        return DB.Clientes.Skip(registrosASkipar).Take(registrosPorPagina).ToList();
     }
 
     private void LimparFiltros()
@@ -167,7 +187,9 @@
         filtroBloqueado = string.Empty;
         filtroBloqueadoInput = string.Empty;
 
-        clientes = GetClientes();
+        clientes = DB.Clientes.ToList();
+        
+        totalPaginas = Convert.ToInt32(Math.Ceiling((double)clientes.Count() / 20));
     }
 
     private void LimparFiltroEspecifico(string nomeFiltro)
@@ -227,6 +249,8 @@
             filtroBloqueado = filtroBloqueadoInput;
             clientes = FiltrarPorBloqueado(clientes);
         }
+
+        totalPaginas = Convert.ToInt32(Math.Ceiling((double)clientes.Count() / 20));
 
         mostrarFiltros = false;
     }

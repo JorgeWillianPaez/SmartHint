@@ -38,7 +38,7 @@
                     <div class="input_padrao">
                         <label for="telefone" class="form-label">Telefone:</label>
                         <Tooltip Title="Telefone do Cliente." Placement="TooltipPlacement.Left">
-                            <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                            <InputMask id="telefone" @bind-Value="Cliente.Telefone" class="form-control" data-mask="(00)00000-0000" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                         </Tooltip>
                         <ValidationMessage For="() => Cliente.Telefone" class="text-danger" />
                     </div>
@@ -54,7 +54,7 @@
                     <div class="input_padrao">
                         <label for="tipopessoa" class="form-label">Tipo de Pessoa:</label>
                         <Tooltip Title="Selecione o tipo de Pessoa" Placement="TooltipPlacement.Left">
-                            <InputSelect id="tipopessoa" @bind-Value="Cliente.TipoPessoa" class="form-control">
+                            <InputSelect id="tipopessoa" @bind-Value="Cliente.TipoPessoa" class="form-control" @oninput="@((args) => HandleSelectChange(args))">
                                 <option value="Física">Física</option>
                                 <option value="Jurídica">Jurídica</option>
                             </InputSelect>
@@ -73,9 +73,9 @@
                     <div class="input_padrao">
                         <label for="inscricaoestadual" class="form-label">Inscrição Estadual:</label>
                         <Tooltip Title="Inscrição Estadual do Cliente, selecionar Isento caso assim for." Placement="TooltipPlacement.Left">
-                            <InputText id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" disabled="@inscricaoEstadualDisabled" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                            <InputMask id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" data-mask="000.000.000.000" disabled="@inscricaoEstadualDisabled" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                         </Tooltip>
-                        <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" />
+                        <!-- <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" /> -->
                     </div>
                     @if (Cliente.TipoPessoa == "Física")
                     {
@@ -97,7 +97,7 @@
                     <div>
                         <div class="d-flex justify-content-between">
                             <label for="isento" class="form-label">Isento:</label>
-                            <InputCheckbox id="isento" @bind-Value="Cliente.Isento" class="form-check-input" />
+                            <input id="isento" type="checkbox" disabled="@isentoDisabled" checked="@Cliente.Isento" class="form-check-input" @onchange="@((ChangeEventArgs args) => HandleCheckboxChange(args))" />
                             <ValidationMessage For="() => Cliente.Isento" class="text-danger" />
                         </div>
                         <div>
@@ -149,18 +149,20 @@
 
     [SupplyParameterFromForm]
     public Cliente Cliente { get; set; } = new Cliente { DataCadastro = DateTime.Today };
-    private bool isChecked { get; set; }
     private bool inscricaoEstadualDisabled = false;
-
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     if (firstRender)
-    //     {
-    //         await JSRuntime.InvokeVoidAsync("telefoneMask");
-    //     }
-    // }
-
+    private bool isentoDisabled = false;
+    private IJSObjectReference? module;
     List<ToastMessage> messages = new List<ToastMessage>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/ClientePages/Create.razor.js");
+
+            await module.InvokeVoidAsync("mask");
+        }
+    }
 
     private void ShowMessage(ToastType toastType, string mensagem) => messages.Add(CreateToastMessage(toastType, mensagem));
 
@@ -171,7 +173,7 @@
             Message = mensagem,
         };
 
-    public async Task AddCliente()
+    private async Task AddCliente()
     {
         if (EmailJaExiste())
         {
@@ -185,6 +187,15 @@
             return;
         }
 
+        if (Cliente.InscricaoEstadual != "")
+        {
+            if (InscricaoJaExiste())
+            {
+                ShowMessage(ToastType.Danger, "Esta Inscrição Estadual já está cadastrada para outro Cliente");
+                return;
+            }
+        }
+
         if (Cliente.Isento == false)
 
             Cliente.DataCadastro = DateTime.Now;
@@ -194,27 +205,45 @@
         NavigationManager.NavigateTo("/");
     }
 
-    public bool EmailJaExiste()
+    private bool EmailJaExiste()
     {
         return DB.Clientes.Any(x => x.Email == Cliente.Email);
     }
 
-    public bool CPFCNPJaExiste()
+    private bool CPFCNPJaExiste()
     {
         return DB.Clientes.Any(x => x.CPFCNPJ == Cliente.CPFCNPJ);
     }
 
-    private void CheckBoxChange(ChangeEventArgs e)
+    private bool InscricaoJaExiste()
     {
-        isChecked = (bool)e.Value;
+        return DB.Clientes.Any(x => x.InscricaoEstadual == Cliente.InscricaoEstadual);
+    }
 
+    private void HandleCheckboxChange(ChangeEventArgs e)
+    {
+        bool isChecked = (bool)e.Value;
         if (isChecked)
         {
-            Cliente.InscricaoEstadual = null;
+            Cliente.InscricaoEstadual = "";
             inscricaoEstadualDisabled = true;
         } else
         {
             inscricaoEstadualDisabled = false;
+        }
+    }
+
+    private void HandleSelectChange(ChangeEventArgs e)
+    {
+        string selectedValue = e.Value.ToString();
+
+        if (selectedValue == "Jurídica")
+        {
+            Cliente.Genero = "";
+            Cliente.DataNascimento = null;
+        } else
+        {
+            isentoDisabled = false;
         }
     }
 }

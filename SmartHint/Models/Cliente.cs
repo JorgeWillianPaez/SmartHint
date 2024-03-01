@@ -15,12 +15,12 @@ namespace SmartHint.Models
         [EmailAddress(ErrorMessage = "O endereço de e-mail não é válido")]
         public string Email { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
-        [RegularExpression(@"^\d{10}(?:\d{1})?$", ErrorMessage = "Campo deve conter 10 ou 11 dígitos.")]
+        [StringLength(14, MinimumLength = 13, ErrorMessage = "O campo deve conter entre no mínimo 10 e no máximo 11 caracteres.")]
         public string Telefone { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
         public string TipoPessoa { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
-        [RegularExpression(@"^\d{11}(?:\d{4})?$", ErrorMessage = "Campo deve conter 11 ou 15 dígitos.")]
+        //[RegularExpression(@"^\d{14}(?:\d{6})?$", ErrorMessage = "Campo deve conter 11 ou 15 dígitos.")]
         public string CPFCNPJ { get; set; } = string.Empty;
         public string InscricaoEstadual { get; set; } = string.Empty;
         public bool Isento { get; set; } = false;
