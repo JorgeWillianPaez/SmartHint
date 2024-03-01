@@ -5,12 +5,11 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-//builder.Services.AddDbContext<SmartHintDbContext>(x => x.UseInMemoryDatabase(databaseName: "SmartHint"));
-builder.Services.AddDbContext<SmartHintDbContext>(options => options.UseMySQL("server=localhost;user=root;database=smarthint;password=m98686766;"));
+builder.Services.AddDbContext<SmartHintDbContext>(x => x.UseInMemoryDatabase(databaseName: "SmartHint"));
+//builder.Services.AddDbContext<SmartHintDbContext>(options => options.UseMySQL("server=localhost;user=root;database=smarthint;password=m98686766;"));
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
 

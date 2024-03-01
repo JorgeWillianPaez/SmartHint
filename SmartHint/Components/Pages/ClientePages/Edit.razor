@@ -47,7 +47,7 @@ else
                         <div class="input_padrao">
                             <label for="telefone" class="form-label">Telefone:</label>
                             <Tooltip Title="Telefone do Cliente." Placement="TooltipPlacement.Left">
-                                <InputNumber id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
+                                <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
                             </Tooltip>
                             <ValidationMessage For="() => Cliente.Telefone" class="text-danger" />
                         </div>
