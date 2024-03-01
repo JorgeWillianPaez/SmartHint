@@ -32,25 +32,42 @@
                 <div class="row gx-4 mb-3">
                     <div class="input-group col">
                         <input value="@filtroNomeInput" @oninput="AtualizarFiltroNome" id="nomeclienterazaosocial" placeholder="Nome ou Razão Social do Cliente" class="form-control" />
+                        <button class="btn btn-danger" @onclick='() => LimparFiltroEspecifico("nome")'>
+                            <img class="btn_lixeira" src="assets/trash.png" alt="Lixeira filtro" />
+                        </button>
                     </div>
                     <div class="input-group col">
-                        <input value="@filtroEmailInput" @oninput="AtualizarFiltroEmail" id="email" placeholder="E-mail do Cliente" class="form-control" />
+                        <input value="@filtroDataInputFormatada" @oninput="AtualizarFiltroData" id="dataCadastro" onfocus="(this.type='date')" placeholder="Selecione uma data ou período" class="form-control" />
+                        <button class="btn btn-danger" @onclick='() => LimparFiltroEspecifico("data")'>
+                            <img class="btn_lixeira" src="assets/trash.png" alt="Lixeira filtro" />
+                        </button>
                     </div>
                     <div class="input-group col">
                         <input value="@filtroTelefoneInput" @oninput="AtualizarFiltroTelefone" id="telefone" type="number" placeholder="Telefone do Cliente" class="form-control" />
-                    </div>
-                    <div class="input-group col">
-                        <input value="@filtroDataInput" @oninput="AtualizarFiltroData" id="dataCadastro" placeholder="Selecione uma data ou período" class="form-control" type="date" />
+                        <button class="btn btn-danger" @onclick='() => LimparFiltroEspecifico("telefone")'>
+                            <img class="btn_lixeira" src="assets/trash.png" alt="Lixeira filtro" />
+                        </button>
                     </div>
                 </div>
-                <div>
-                    <div class="input-group">
-                        <label for="bloqueado" class="form-label">Bloqueado:</label>
-                        <select @onchange="AtualizarFiltroBloqueado" id="bloqueado" class="form-control">
-                            <option value="">Selecione uma opção</option>
-                            <option value="Sim">Sim</option>
-                            <option value="Nao">Não</option>
-                        </select>
+                <div class="row">
+                    <div class="input-group col">
+                        <input value="@filtroEmailInput" @oninput="AtualizarFiltroEmail" id="email" placeholder="E-mail do Cliente" class="form-control" />
+                        <button class="btn btn-danger" @onclick='() => LimparFiltroEspecifico("email")'>
+                            <img class="btn_lixeira" src="assets/trash.png" alt="Lixeira filtro" />
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center col">
+                        <label for="bloqueado" class="form-label m-0">Bloqueado:</label>
+                        <div class="input-group">
+                            <select value="@filtroBloqueadoInput" @onchange="AtualizarFiltroBloqueado" id="bloqueado" class="form-control">
+                                <option value="">Selecione uma opção</option>
+                                <option value="Sim">Sim</option>
+                                <option value="Nao">Não</option>
+                            </select>
+                            <button class="btn btn-danger" @onclick='() => LimparFiltroEspecifico("bloqueado")' >
+                                <img class="btn_lixeira" src="assets/trash.png" alt="Lixeira filtro" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -99,9 +116,18 @@
 
 @code {
     private IEnumerable<Cliente> clientes = default!;
-
     private bool mostrarFiltros = false;
-
+    private string filtroDataInputFormatada
+    {
+        get => filtroDataInput?.ToString("yyyy-MM-dd");
+        set
+        {
+            if (DateTime.TryParse(value, out DateTime result))
+                filtroDataInput = result;
+            else
+                filtroDataInput = null;
+        }
+    }
     private string filtroNome = string.Empty;
     private string filtroNomeInput = string.Empty;
     private string filtroEmail = string.Empty;
@@ -110,8 +136,8 @@
     private string filtroTelefoneInput = string.Empty;
     private DateTime? filtroData = null;
     private DateTime? filtroDataInput = null;
-    private string filtroBloqueado = null;
-    private string filtroBloqueadoInput = null;
+    private string filtroBloqueado = string.Empty;
+    private string filtroBloqueadoInput = string.Empty;
 
     protected override void OnInitialized()
     {
@@ -142,6 +168,35 @@
         filtroBloqueadoInput = string.Empty;
 
         clientes = GetClientes();
+    }
+
+    private void LimparFiltroEspecifico(string nomeFiltro)
+    {
+        if (nomeFiltro == "nome")
+        {
+            filtroNome = string.Empty;
+            filtroNomeInput = string.Empty;
+        }
+        else if (nomeFiltro == "email")
+        {
+            filtroEmail = string.Empty;
+            filtroEmailInput = string.Empty;
+        }
+        else if (nomeFiltro == "telefone")
+        {
+            filtroTelefone = string.Empty;
+            filtroTelefoneInput = string.Empty;
+        }
+        else if (nomeFiltro == "data")
+        {
+            filtroData = null;
+            filtroDataInput = null;
+        }
+        else if (nomeFiltro == "bloqueado")
+        {
+            filtroBloqueado = string.Empty;
+            filtroBloqueadoInput = string.Empty;
+        }
     }
 
     private void FiltrarClientes()

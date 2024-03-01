@@ -34,13 +34,17 @@
                         <ValidationMessage For="() => Cliente.Email" class="text-danger" />
                     </div>
                 </div>
-                <div class="d-flex">
+                <div class="d-flex justify-content-between">
                     <div class="input_padrao">
                         <label for="telefone" class="form-label">Telefone:</label>
                         <Tooltip Title="Telefone do Cliente." Placement="TooltipPlacement.Left">
-                            <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
+                            <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                         </Tooltip>
                         <ValidationMessage For="() => Cliente.Telefone" class="text-danger" />
+                    </div>
+                    <div class="input_padrao">
+                        <label for="dataCadastro" class="form-label">Data de Cadastro:</label>
+                        <InputDate id="dataCadastro" @bind-Value="Cliente.DataCadastro" disabled class="form-control" />
                     </div>
                 </div>
             </fieldset>
@@ -60,7 +64,7 @@
                     <div class="input_padrao">
                         <label for="cpfcnpj" class="form-label">CPF/CNPJ:</label>
                         <Tooltip Title="Insira o CPF ou o CNPJ do Cliente." Placement="TooltipPlacement.Right">
-                            <InputNumber id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" />
+                            <InputText id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                         </Tooltip>
                         <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" />
                     </div>
@@ -69,7 +73,7 @@
                     <div class="input_padrao">
                         <label for="inscricaoestadual" class="form-label">Inscrição Estadual:</label>
                         <Tooltip Title="Inscrição Estadual do Cliente, selecionar Isento caso assim for." Placement="TooltipPlacement.Left">
-                            <InputNumber id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" />
+                            <InputText id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" disabled="@inscricaoEstadualDisabled" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                         </Tooltip>
                         <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" />
                     </div>
@@ -144,15 +148,17 @@
 @code {
 
     [SupplyParameterFromForm]
-    public Cliente Cliente { get; set; } = new();
+    public Cliente Cliente { get; set; } = new Cliente { DataCadastro = DateTime.Today };
+    private bool isChecked { get; set; }
+    private bool inscricaoEstadualDisabled = false;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("telefoneMask");
-        }
-    }
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         await JSRuntime.InvokeVoidAsync("telefoneMask");
+    //     }
+    // }
 
     List<ToastMessage> messages = new List<ToastMessage>();
 
@@ -179,7 +185,9 @@
             return;
         }
 
-        Cliente.DataCadastro = DateTime.Now;
+        if (Cliente.Isento == false)
+
+            Cliente.DataCadastro = DateTime.Now;
 
         DB.Clientes.Add(Cliente);
         await DB.SaveChangesAsync();
@@ -194,5 +202,19 @@
     public bool CPFCNPJaExiste()
     {
         return DB.Clientes.Any(x => x.CPFCNPJ == Cliente.CPFCNPJ);
+    }
+
+    private void CheckBoxChange(ChangeEventArgs e)
+    {
+        isChecked = (bool)e.Value;
+
+        if (isChecked)
+        {
+            Cliente.InscricaoEstadual = null;
+            inscricaoEstadualDisabled = true;
+        } else
+        {
+            inscricaoEstadualDisabled = false;
+        }
     }
 }

@@ -15,18 +15,20 @@ namespace SmartHint.Models
         [EmailAddress(ErrorMessage = "O endereço de e-mail não é válido")]
         public string Email { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
-        [RegularExpression(@"^\d{10,11}$", ErrorMessage = "O telefone deve conter apenas números e ter entre 10 e 11 dígitos.")]
+        [RegularExpression(@"^\d{10}(?:\d{1})?$", ErrorMessage = "Campo deve conter 10 ou 11 dígitos.")]
         public string Telefone { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
         public string TipoPessoa { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
-        public int? CPFCNPJ { get; set; }
-        public int? InscricaoEstadual { get; set; }
+        [RegularExpression(@"^\d{11}(?:\d{4})?$", ErrorMessage = "Campo deve conter 11 ou 15 dígitos.")]
+        public string CPFCNPJ { get; set; } = string.Empty;
+        public string InscricaoEstadual { get; set; } = string.Empty;
         public bool Isento { get; set; } = false;
         public string Genero { get; set; } = string.Empty;
         public DateTime? DataNascimento { get; set; } = null;
         public bool Bloqueado { get; set; } = false;
         [Required(ErrorMessage = "Campo obrigatório")]
+        [StringLength(15, MinimumLength = 8, ErrorMessage = "O campo deve conter entre no mínimo 8 e no máximo 15 caracteres.")]
         public string Senha { get; set; } = string.Empty;
         [Required(ErrorMessage = "Campo obrigatório")]
         [Compare("Senha", ErrorMessage = "As senhas não conferem")]

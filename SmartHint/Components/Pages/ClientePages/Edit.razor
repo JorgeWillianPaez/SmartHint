@@ -47,7 +47,7 @@ else
                         <div class="input_padrao">
                             <label for="telefone" class="form-label">Telefone:</label>
                             <Tooltip Title="Telefone do Cliente." Placement="TooltipPlacement.Left">
-                                <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" />
+                                <InputText id="telefone" @bind-Value="Cliente.Telefone" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                             </Tooltip>
                             <ValidationMessage For="() => Cliente.Telefone" class="text-danger" />
                         </div>
@@ -69,7 +69,7 @@ else
                         <div class="input_padrao">
                             <label for="cpfcnpj" class="form-label">CPF/CNPJ:</label>
                             <Tooltip Title="Insira o CPF ou o CNPJ do Cliente." Placement="TooltipPlacement.Right">
-                                <InputNumber id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" />
+                                <InputText id="cpfcnpj" @bind-Value="Cliente.CPFCNPJ" class="form-control" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                             </Tooltip>
                             <ValidationMessage For="() => Cliente.CPFCNPJ" class="text-danger" />
                         </div>
@@ -78,9 +78,9 @@ else
                         <div class="input_padrao">
                             <label for="inscricaoestadual" class="form-label">Inscrição Estadual:</label>
                             <Tooltip Title="Inscrição Estadual do Cliente, selecionar Isento caso assim for." Placement="TooltipPlacement.Left">
-                                <InputNumber id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" />
+                                <InputText id="inscricaoestadual" @bind-Value="Cliente.InscricaoEstadual" class="form-control" />
                             </Tooltip>
-                            <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" />
+                            <ValidationMessage For="() => Cliente.InscricaoEstadual" class="text-danger" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
                         </div>
                         @if (Cliente.TipoPessoa == "Física")
                         {
