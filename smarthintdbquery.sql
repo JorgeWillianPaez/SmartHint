@@ -19,6 +19,7 @@ create table Clientes(
     primary key(Id)
 );
 
+-- MODELOS DE CLIENTES
 INSERT INTO Clientes (NomeClienteRazaoSocial, Email, Telefone, DataNascimento, Senha, TipoPessoa, CPFCNPJ, InscricaoEstadual, Isento, Genero, Bloqueado, DataCadastro)
 VALUES 
     ('João Silva', 'joao@example.com', '(11)12345-6789', '1980-01-01', 'senha123', 'Física', '123.456.789-00', '123.456.789.123', FALSE, 'Masculino', TRUE, '2024-03-01'),
